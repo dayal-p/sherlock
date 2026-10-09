@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SherlockLensCase",
+  "type": "object",
+  "required": ["case_id", "scene", "images", "observations", "deductions", "verdict"],
+  "properties": {
+    "case_id": {"type": "string"},
+    "scene": {"type": "string", "enum": ["desk","room","bag","vehicle","outdoor","person-marks","mixed","other"]},
+    "mode": {"type": "string", "enum": ["exhaustive","quick"]},
+    "images": {
+      "type": "array", "minItems": 1,
+      "items": {"type": "object", "required": ["id"], "properties": {
+        "id": {"type": "integer", "minimum": 1}, "label": {"type": "string"}, "synopsis": {"type": "string"}}}
+    },
+    "verdict": {"type": "object", "required": ["headline", "findings", "bold_bet", "least_certain"],
+      "properties": {"headline": {"type": "string"},
+        "findings": {"type": "array", "items": {"type": "string"}},
+        "bold_bet": {"type": "string"}, "least_certain": {"type": "string"}}},
+    "observations": {
+      "type": "array", "minItems": 1,
+      "items": {"type": "object", "required": ["id","image","category","confidence","tier","text","location"],
+        "properties": {
+          "id": {"type": "string"}, "image": {"type": "integer"},
+          "category": {"type": "string", "enum": ["A","B","C","D","E","F","G","H","I","J","K"]},
+          "confidence": {"type": "string", "enum": ["high","med","low"]},
+          "tier": {"type": "string", "enum": ["core","texture"]},
+          "text": {"type": "string"}, "location": {"type": "string"},
+          "late": {"type": "boolean"}}}},
+    "deductions": {
+      "type": "array", "minItems": 1,
+      "items": {"type": "object", "required": ["id","claim","chain","evidence","confidence","kind","alternative","scope","distinctive"],
+        "properties": {
+          "id": {"type": "string"}, "claim": {"type": "string"},
+          "chain": {"type": "array", "maxItems": 3, "items": {"type": "string"}},
+          "evidence": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+          "traces": {"type": "array", "items": {"type": "string"}},
+          "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+          "kind": {"type": "string", "enum": ["safe","bold"]},
+          "alternative": {"type": "string"}, "scope": {"type": "string"},
+          "distinctive": {"type": "boolean"},
+          "cross_image": {"type": "boolean"},
+          "grade": {"type": "string", "enum": ["hit","half","miss","ungraded"]}}}},
+    "cross_image": {"type": "object", "properties": {
+      "same_subject": {"type": "string", "enum": ["same","probably_same","different","cannot_tell"]},
+      "timeline": {"type": "array", "items": {"type": "string"}},
+      "changes": {"type": "array", "items": {"type": "string"}},
+      "contradictions": {"type": "array", "items": {"type": "string"}}}},
+    "authenticity": {"type": "object", "properties": {
+      "flags": {"type": "array", "items": {"type": "string"}}, "assessment": {"type": "string"}, "confidence": {"type": "number"}}},
+    "open_questions": {"type": "array", "items": {"type": "string"}},
+    "closing": {"type": "string"}
+  }
+}
